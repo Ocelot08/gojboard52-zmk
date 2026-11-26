@@ -1,3 +1,5 @@
+> **This is the gojboard52 fork.** Keyboard-specific firmware, the touch-bar driver and build instructions are in [GOJBOARD52.md](GOJBOARD52.md). The rest of this file is ZMK's own README.
+
 # Zephyr™ Mechanical Keyboard (ZMK) Firmware
 
 [![Discord](https://img.shields.io/discord/719497620560543766)](https://zmk.dev/community/discord/invite)

@@ -1,0 +1,30 @@
+/*
+ * Needed only when building gojboard52_left with nice_view_adapter + nice_view.
+ *
+ * The shared gojboard52.dtsi defines a "slider" (AT42QT2120 touch bar) node
+ * on &pro_micro_i2c for both halves, even though only the right half ever has
+ * the physical chip - it's simply inert on the left build otherwise.
+ * nice_view_adapter disables &pro_micro_i2c entirely (SPI0 and I2C0 share the
+ * same nRF52840 pins/peripheral, so it needs those pins back for the
+ * nice!view's SPI bus), which leaves this node dangling with no bus to
+ * attach to. Explicitly disable it here rather than editing the shared dtsi,
+ * since the right half (which has the real chip) is unaffected either way.
+ *
+ * Also overrides nice_view_adapter's own CS pin (it hardcodes pro_micro 1,
+ * applied after this shield's own overlay in the usual build order - a plain
+ * edit in gojboard52_left.overlay wouldn't stick). On the rev 2 PCB CS is
+ * the shared change/CS net on pro_micro 19 (U1 pad 18) - same pin the touch
+ * bar's CHANGE uses on the other half, see change-gpios in gojboard52.dtsi.
+ *
+ * Build with:
+ *   -DSHIELD="gojboard52_left nice_view_adapter nice_view"
+ *   -DEXTRA_DTC_OVERLAY_FILE="boards/shields/gojboard52/nice_view_compat.overlay"
+ */
+
+&slider {
+    status = "disabled";
+};
+
+&nice_view_spi {
+    cs-gpios = <&pro_micro 19 GPIO_ACTIVE_HIGH>;
+};

@@ -1,0 +1,35 @@
+/*
+ * Breadboard test override — NOT part of the production gojboard52 shield.
+ *
+ * The production PCB wires the AT42QT2120 CHANGE line to P1.09, which the
+ * real board reaches via a direct trace to the nice!nano module's pads.
+ * That pin isn't exposed on a stock nice!nano's header, so it can't be
+ * reached on a breadboard. This redirects CHANGE to D1 (P0.06) instead,
+ * which is. Everything else (I2C pins, pull-ups on the touch bar PCB
+ * itself) is unchanged from production.
+ *
+ * Build with:
+ *   west build -s app -d build/breadboard_test -b "nice_nano@2.0.0/nrf52840/zmk" \
+ *     -- -DSHIELD="gojboard52_left" -DEXTRA_DTC_OVERLAY_FILE="boards/shields/gojboard52/breadboard_test.overlay"
+ */
+
+&slider {
+    change-gpios = <&pro_micro 1 GPIO_ACTIVE_LOW>; /* D1 / P0.06 */
+
+    /* Noise-immunity experiment (see AT42QT2120 datasheet section 3.1 /
+     * 5.15): prolongs the charge-transfer period per acquisition by 1us
+     * per count, which the datasheet specifically recommends for designs
+     * using series resistors on the electrodes (this board uses 4.7k on
+     * R1/R2/R3). Trying this because the board got stuck in a continuous
+     * auto-recalibration loop after a few minutes on the breadboard,
+     * which the datasheet attributes to drift compensation being unable
+     * to keep up with supply/RF noise.
+     *
+     * The right value isn't a portable constant — it depends on this
+     * exact series-resistor value and electrode geometry. If the touch
+     * module is ever redesigned with different resistor values or
+     * electrode size, this needs to be re-tuned, not copied as-is.
+     * 32 below is a starting point for testing, not a proven final value.
+     */
+    charge-time = <32>;
+};

@@ -1,0 +1,58 @@
+# SPDX-License-Identifier: MIT
+
+if SHIELD_NICE_VIEW_DUAL
+
+config LS0XX_VCOM_THREAD_PRIO
+    default 11
+
+config LV_Z_VDB_SIZE
+    default 100
+
+config LV_DPI_DEF
+    default 161
+
+config LV_Z_BITS_PER_PIXEL
+    default 1
+
+choice LV_COLOR_DEPTH
+    default LV_COLOR_DEPTH_1
+endchoice
+
+choice ZMK_DISPLAY_WORK_QUEUE
+    default ZMK_DISPLAY_WORK_QUEUE_DEDICATED
+endchoice
+
+choice ZMK_DISPLAY_STATUS_SCREEN
+    default ZMK_DISPLAY_STATUS_SCREEN_CUSTOM
+endchoice
+
+config LV_Z_MEM_POOL_SIZE
+    default 8192
+
+config ZMK_DISPLAY_STATUS_SCREEN_CUSTOM
+    imply NICE_VIEW_DUAL_STATUS
+
+# This screen shows the other half's battery, so make sure the central keeps
+# collecting it (it is a no-op on a half that is not the central).
+config ZMK_SPLIT_BLE_CENTRAL_BATTERY_LEVEL_FETCHING
+    default y if ZMK_SPLIT_ROLE_CENTRAL
+
+endif # SHIELD_NICE_VIEW_DUAL
+
+config NICE_VIEW_DUAL_STATUS
+    bool "nice!view dual-battery status screen (left + right battery, layer)"
+    select LV_FONT_MONTSERRAT_14
+    select LV_FONT_MONTSERRAT_16
+    select LV_FONT_MONTSERRAT_18
+    select LV_USE_IMAGE
+    select LV_USE_CANVAS
+
+config NICE_VIEW_DUAL_INVERTED
+    bool "Invert the dual-battery status screen colors"
+    depends on NICE_VIEW_DUAL_STATUS
+
+config NICE_VIEW_DUAL_ROTATE_180
+    bool "Rotate the dual-battery status screen by 180 degrees"
+    depends on NICE_VIEW_DUAL_STATUS
+    help
+      Use this if the screen appears upside down in your case.
