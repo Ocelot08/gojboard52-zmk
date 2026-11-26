@@ -50,12 +50,12 @@ west build -s app -d build/left_niceview -b "nice_nano@2.0.0/nrf52840/zmk" -- \
 
 Idle after 30 s; deep sleep after 12 hours without a keypress (`CONFIG_ZMK_IDLE_SLEEP_TIMEOUT` in
 `gojboard52_left.conf` and `gojboard52_right.conf`). A keypress on either half wakes that half.
-Deep sleep is not tested on every hardware revision yet; battery life has not been measured.
+Sleep and wake work on hardware; battery life has not been measured.
 
 ## Status
 
-Working on hardware: keys, split link, nice!view screen, touch-bar volume. Not yet verified on hardware: the
-touch-bar start-up and recovery changes, and the 12 hour deep sleep.
+Working on hardware: keys, split link, nice!view screen, touch-bar volume (including the deferred start-up and
+recovery changes), and deep sleep and wake. Not yet measured: battery life.
 
 ## Upstream
 
